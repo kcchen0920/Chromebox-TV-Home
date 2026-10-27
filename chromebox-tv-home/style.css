@@ -113,15 +113,42 @@ body {
   margin-top: 10px;
   margin-bottom: 24px;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 6px;
 }
 
 .focus-title-section h2 {
   font-size: 40px;
   font-weight: 600;
   letter-spacing: -0.5px;
-  margin-bottom: 6px;
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   transition: opacity 0.2s ease;
+}
+
+.action-badge {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f1f5f9;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+  white-space: nowrap;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .focus-title-section p {
@@ -138,6 +165,36 @@ body {
   height: var(--mascot-size);
   pointer-events: none;
   z-index: 100;
+  /* 平滑的物理位移動畫 */
+  transition: transform 0.28s cubic-bezier(0.25, 1.4, 0.45, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* 往右跳躍傾角與往左跳躍傾角 */
+.mascot-cursor.jump-right .mascot-bubble {
+  animation: mascotJumpRight 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.mascot-cursor.jump-left .mascot-bubble {
+  animation: mascotJumpLeft 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes mascotJumpRight {
+  0% { transform: scale(1.15, 0.85) translateY(0) rotate(0deg); }
+  35% { transform: scale(0.9, 1.15) translateY(-36px) rotate(9deg); }
+  75% { transform: scale(1.1, 0.9) translateY(2px) rotate(-3deg); }
+  100% { transform: scale(1, 1) translateY(0) rotate(0deg); }
+}
+
+@keyframes mascotJumpLeft {
+  0% { transform: scale(1.15, 0.85) translateY(0) rotate(0deg); }
+  35% { transform: scale(0.9, 1.15) translateY(-36px) rotate(-9deg); }
+  75% { transform: scale(1.1, 0.9) translateY(2px) rotate(3deg); }
+  100% { transform: scale(1, 1) translateY(0) rotate(0deg); }
+}
   /* 平滑的物理位移動畫 */
   transition: transform 0.28s cubic-bezier(0.25, 1.4, 0.45, 1);
   display: flex;

@@ -33,9 +33,12 @@
       </div>
     </header>
 
-    <!-- 主展示區：當前選中應用的標題 -->
+    <!-- 主展示區：當前選中應用的標題與兒子動作標籤 -->
     <div class="focus-title-section">
-      <h2 id="focusAppName">YouTube</h2>
+      <div class="title-row">
+        <h2 id="focusAppName">YouTube</h2>
+        <span class="action-badge" id="actionBadge">👦 興奮看片跳躍</span>
+      </div>
       <p id="focusAppDesc">影音串流與熱門影片</p>
     </div>
 
@@ -109,6 +112,12 @@
             <label for="bounceToggle">
               <input type="checkbox" id="bounceToggle" checked>
               啟用切換時的跳躍彈跳特效 (Jump & Bounce)
+            </label>
+          </div>
+          <div class="setting-row">
+            <label for="dynamicActionsToggle">
+              <input type="checkbox" id="dynamicActionsToggle" checked>
+              啟用不同選單自動切換專屬動作（YouTube歡呼、Netflix觀影、Spotify搖擺等）
             </label>
           </div>
         </section>

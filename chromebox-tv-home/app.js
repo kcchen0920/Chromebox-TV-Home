@@ -1,6 +1,6 @@
 // Clean TV Home - Chromebox Navigation & Mascot Controller
 
-// 預設 APP 清單
+// 預設 APP 清單（每個選單皆配有專屬的兒子動作動圖與風格標籤）
 const DEFAULT_APPS = [
   {
     id: 'youtube',
@@ -8,6 +8,8 @@ const DEFAULT_APPS = [
     desc: '串流影音、電視版大螢幕體驗',
     url: 'https://www.youtube.com/tv',
     color: '#FF0000',
+    mascotSrc: 'assets/actions/pose_youtube.webp',
+    actionTag: '🎉 興奮歡呼躍動',
     icon: `<svg viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
   },
   {
@@ -16,6 +18,8 @@ const DEFAULT_APPS = [
     desc: '電影、影集與熱門節目',
     url: 'https://www.netflix.com',
     color: '#E50914',
+    mascotSrc: 'assets/actions/pose_netflix.webp',
+    actionTag: '🍿 舒適放鬆觀影',
     icon: `<svg viewBox="0 0 24 24" fill="#E50914"><path d="M5.398 0v24L9.8 14.86 14.202 24V0H9.8v9.14L5.398 0z"/><path d="M14.202 0v24h4.4V0h-4.4z"/><path d="M5.398 0H1v24h4.398V0z"/></svg>`
   },
   {
@@ -24,6 +28,8 @@ const DEFAULT_APPS = [
     desc: '迪士尼、皮克斯、漫威與星戰',
     url: 'https://www.disneyplus.com',
     color: '#113CCF',
+    mascotSrc: 'assets/actions/pose_disney.webp',
+    actionTag: '✨ 迪士尼魔幻懸浮',
     icon: `<svg viewBox="0 0 24 24" fill="#38BDF8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>`
   },
   {
@@ -32,6 +38,8 @@ const DEFAULT_APPS = [
     desc: '正版最新日本動畫線上看',
     url: 'https://ani.gamer.com.tw',
     color: '#00B4D8',
+    mascotSrc: 'assets/actions/pose_gamer.webp',
+    actionTag: '⚡ 動漫熱血小跳步',
     icon: `<svg viewBox="0 0 24 24" fill="#00B4D8"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zm-11-2l6-4-6-4v8z"/></svg>`
   },
   {
@@ -40,6 +48,8 @@ const DEFAULT_APPS = [
     desc: '百萬首流行音樂與 Podcast',
     url: 'https://open.spotify.com',
     color: '#1DB954',
+    mascotSrc: 'assets/actions/pose_spotify.webp',
+    actionTag: '🎵 音樂節奏律動搖擺',
     icon: `<svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`
   },
   {
@@ -48,22 +58,25 @@ const DEFAULT_APPS = [
     desc: '遊戲實況與社群直播',
     url: 'https://www.twitch.tv',
     color: '#9146FF',
+    mascotSrc: 'assets/actions/pose_twitch.webp',
+    actionTag: '🎮 玩家實況慶祝跳躍',
     icon: `<svg viewBox="0 0 24 24" fill="#9146FF"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>`
   }
 ];
 
-// 內建去背照片與動圖庫
+// 內建去背照片與動圖庫（供設定面板預覽與選擇）
 const MASCOT_PRESETS = [
-  { name: '動態呼吸跳躍 (推薦)', src: 'assets/son_mascot_idle.webp' },
-  { name: '活力跳躍動態', src: 'assets/son_mascot_jump.webp' },
-  { name: '去背寫真 1', src: 'assets/son_cutouts/1791980875662_cutout.png' },
-  { name: '去背寫真 2', src: 'assets/son_cutouts/MVIMG_20261025_172630_cutout.png' },
-  { name: '去背寫真 3', src: 'assets/son_cutouts/IMG_20251026_110414_cutout.png' },
-  { name: '去背寫真 4', src: 'assets/son_cutouts/IMG_20251206_155428_cutout.png' },
-  { name: '去背寫真 5', src: 'assets/son_cutouts/IMG_20251227_112032_cutout.png' },
-  { name: '去背寫真 6', src: 'assets/son_cutouts/MVIMG_20260627_114936_cutout.png' },
-  { name: '去背寫真 7', src: 'assets/son_cutouts/MVIMG_20260628_142552_2_cutout.png' },
-  { name: '卡通揮手小男孩', src: 'assets/mascot_default.svg' }
+  { name: 'YouTube 興奮跳躍', src: 'assets/actions/pose_youtube.webp' },
+  { name: 'Netflix 放鬆觀影', src: 'assets/actions/pose_netflix.webp' },
+  { name: 'Disney+ 魔幻懸浮', src: 'assets/actions/pose_disney.webp' },
+  { name: '動畫瘋 熱血跳步', src: 'assets/actions/pose_gamer.webp' },
+  { name: 'Spotify 音樂律動', src: 'assets/actions/pose_spotify.webp' },
+  { name: 'Twitch 玩家慶祝', src: 'assets/actions/pose_twitch.webp' },
+  { name: '全身待機呼吸動態', src: 'assets/son_mascot_idle.webp' },
+  { name: '全身活潑跳躍動態', src: 'assets/son_mascot_jump.webp' },
+  { name: '去背原圖 1 (微笑寫真)', src: 'assets/son_cutouts/1791980875662_cutout.png' },
+  { name: '去背原圖 2 (生活抓拍)', src: 'assets/son_cutouts/MVIMG_20261025_172630_cutout.png' },
+  { name: '去背原圖 3 (活潑全身)', src: 'assets/son_cutouts/IMG_20251026_110414_cutout.png' }
 ];
 
 class TVLauncher {
@@ -76,6 +89,7 @@ class TVLauncher {
     this.grid = document.getElementById('appsGrid');
     this.focusAppName = document.getElementById('focusAppName');
     this.focusAppDesc = document.getElementById('focusAppDesc');
+    this.actionBadge = document.getElementById('actionBadge');
     this.ambientGlow = document.getElementById('ambientGlow');
     this.mascotCursor = document.getElementById('mascotCursor');
     this.mascotImg = document.getElementById('mascotImg');
@@ -104,7 +118,19 @@ class TVLauncher {
   loadApps() {
     try {
       const saved = localStorage.getItem('tv_apps');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // 合併新屬性，確保每個 App 都有獨立的動作與標籤
+        return parsed.map((a, idx) => {
+          const def = DEFAULT_APPS[idx] || DEFAULT_APPS[0];
+          return {
+            ...def,
+            ...a,
+            mascotSrc: a.mascotSrc || def.mascotSrc,
+            actionTag: a.actionTag || def.actionTag
+          };
+        });
+      }
     } catch (e) {
       console.warn('Failed to parse saved apps', e);
     }
@@ -123,6 +149,7 @@ class TVLauncher {
       mascotSize: 90,
       mascotOffset: 20,
       bounce: true,
+      dynamicPerAppActions: true,
       customMascotSrc: 'assets/son_mascot_idle.webp'
     };
     try {
@@ -143,11 +170,12 @@ class TVLauncher {
     document.documentElement.style.setProperty('--mascot-size', `${this.settings.mascotSize}px`);
     document.documentElement.style.setProperty('--mascot-offset', `${this.settings.mascotOffset}px`);
 
-    if (this.settings.customMascotSrc) {
-      this.mascotImg.src = this.settings.customMascotSrc;
-    } else {
-      this.mascotImg.src = 'assets/mascot_default.svg';
-    }
+    const currentApp = this.apps[this.currentIndex] || this.apps[0];
+    const targetSrc = (this.settings.dynamicPerAppActions && currentApp && currentApp.mascotSrc)
+      ? currentApp.mascotSrc
+      : (this.settings.customMascotSrc || 'assets/son_mascot_idle.webp');
+
+    this.mascotImg.src = targetSrc;
   }
 
   renderApps() {
@@ -192,7 +220,7 @@ class TVLauncher {
     setInterval(update, 1000);
   }
 
-  // 播放電視選單切換音效 (純 Web Audio 合成，不需外部音檔)
+  // 播放電視選單切換音效
   playNavSound() {
     try {
       if (!this.audioCtx) {
@@ -204,7 +232,7 @@ class TVLauncher {
       const osc = this.audioCtx.createOscillator();
       const gain = this.audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(480, this.audioCtx.currentTime);
+      osc.frequency.setValueAtTime(520, this.audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(880, this.audioCtx.currentTime + 0.08);
 
       gain.gain.setValueAtTime(0.12, this.audioCtx.currentTime);
@@ -217,10 +245,11 @@ class TVLauncher {
     } catch (e) {}
   }
 
-  // 更新焦點卡片與兒子動圖游標位置
+  // 更新焦點卡片與兒子動圖游標位置（支援切換專屬動作）
   updateFocus(index, playSound = true) {
     if (index < 0 || index >= this.apps.length) return;
     const prevIndex = this.currentIndex;
+    const direction = index >= prevIndex ? 'right' : 'left';
     this.currentIndex = index;
 
     const cards = this.grid.querySelectorAll('.app-card');
@@ -237,19 +266,31 @@ class TVLauncher {
     if (activeApp) {
       this.focusAppName.textContent = activeApp.name;
       this.focusAppDesc.textContent = activeApp.desc || '';
+      if (this.actionBadge) {
+        this.actionBadge.textContent = activeApp.actionTag || '👦 活力跳選';
+      }
       this.ambientGlow.style.background = `radial-gradient(circle, ${activeApp.color} 0%, transparent 70%)`;
       document.documentElement.style.setProperty('--focus-glow', `${activeApp.color}66`);
+
+      // 切換為當前選單的專屬兒子動作動圖！
+      const targetSrc = (this.settings.dynamicPerAppActions && activeApp.mascotSrc)
+        ? activeApp.mascotSrc
+        : (this.settings.customMascotSrc || 'assets/son_mascot_idle.webp');
+
+      if (!this.mascotImg.src.endsWith(targetSrc)) {
+        this.mascotImg.src = targetSrc;
+      }
     }
 
     if (playSound && prevIndex !== index) {
       this.playNavSound();
     }
 
-    this.updateMascotPosition(prevIndex !== index && this.settings.bounce);
+    this.updateMascotPosition(prevIndex !== index && this.settings.bounce, direction);
   }
 
-  // 精準計算將動圖放置在 APP 正上方
-  updateMascotPosition(triggerJump = false) {
+  // 精準計算將動圖放置在 APP 正上方，並套用方向性跳躍傾角
+  updateMascotPosition(triggerJump = false, direction = 'right') {
     const focusedCard = this.grid.querySelector('.app-card.focused');
     if (!focusedCard) return;
 
@@ -265,21 +306,19 @@ class TVLauncher {
     this.mascotCursor.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
 
     if (triggerJump) {
-      this.mascotCursor.classList.remove('mascot-jumping');
+      this.mascotCursor.classList.remove('mascot-jumping', 'jump-right', 'jump-left');
       // 強制重繪以重啟 CSS 跳躍動畫
       void this.mascotCursor.offsetWidth;
-      this.mascotCursor.classList.add('mascot-jumping');
+      this.mascotCursor.classList.add(direction === 'right' ? 'jump-right' : 'jump-left');
     }
   }
 
   launchApp(app) {
     if (!app || !app.url) return;
-    // 在全螢幕或新分頁開啟應用
     window.open(app.url, '_blank');
   }
 
   bindEvents() {
-    // 遙控器與鍵盤方向鍵監聽
     window.addEventListener('keydown', (e) => {
       if (this.modal.classList.contains('open')) {
         if (e.key === 'Escape') this.closeSettings();
@@ -298,8 +337,7 @@ class TVLauncher {
         case 'ArrowUp':
         case 'ArrowDown':
           e.preventDefault();
-          // 單列佈局上下鍵跳動提示
-          this.updateMascotPosition(true);
+          this.updateMascotPosition(true, 'right');
           break;
         case 'Enter':
           e.preventDefault();
@@ -311,7 +349,6 @@ class TVLauncher {
           this.openSettings();
           break;
         case 'F11':
-          // 允許原生切換全螢幕
           break;
       }
     });
@@ -336,16 +373,18 @@ class TVLauncher {
       const reader = new FileReader();
       reader.onload = (evt) => {
         const dataUrl = evt.target.result;
-        this.saveSettings({ customMascotSrc: dataUrl });
+        this.saveSettings({ customMascotSrc: dataUrl, dynamicPerAppActions: false });
         document.getElementById('mascotSettingPreview').src = dataUrl;
+        document.getElementById('dynamicActionsToggle').checked = false;
       };
       reader.readAsDataURL(file);
     });
 
     // 重設動圖
     document.getElementById('resetMascotBtn').addEventListener('click', () => {
-      this.saveSettings({ customMascotSrc: 'assets/son_mascot_idle.webp' });
+      this.saveSettings({ customMascotSrc: 'assets/son_mascot_idle.webp', dynamicPerAppActions: true });
       document.getElementById('mascotSettingPreview').src = 'assets/son_mascot_idle.webp';
+      document.getElementById('dynamicActionsToggle').checked = true;
       this.renderMascotPresets();
     });
 
@@ -378,6 +417,16 @@ class TVLauncher {
       this.saveSettings({ bounce: e.target.checked });
     });
 
+    // 各選單專屬動作切換開關
+    const dynamicActionsToggle = document.getElementById('dynamicActionsToggle');
+    if (dynamicActionsToggle) {
+      dynamicActionsToggle.checked = this.settings.dynamicPerAppActions;
+      dynamicActionsToggle.addEventListener('change', (e) => {
+        this.saveSettings({ dynamicPerAppActions: e.target.checked });
+        this.updateFocus(this.currentIndex, false);
+      });
+    }
+
     // 新增 APP 按鈕
     document.getElementById('addAppBtn').addEventListener('click', () => {
       const newApp = {
@@ -386,6 +435,8 @@ class TVLauncher {
         desc: '常用網站捷徑',
         url: 'https://',
         color: '#3B82F6',
+        mascotSrc: 'assets/son_mascot_idle.webp',
+        actionTag: '🌟 探索新應用',
         icon: '<span style="font-size:32px">🌐</span>'
       };
       this.saveApps([...this.apps, newApp]);
@@ -400,6 +451,11 @@ class TVLauncher {
     this.renderAppEditorList();
   }
 
+  closeSettings() {
+    this.modal.classList.remove('open');
+    this.updateFocus(this.currentIndex, false);
+  }
+
   renderMascotPresets() {
     const grid = document.getElementById('mascotPresetsGrid');
     if (!grid) return;
@@ -410,17 +466,14 @@ class TVLauncher {
       item.title = preset.name;
       item.innerHTML = `<img src="${preset.src}" alt="${preset.name}">`;
       item.addEventListener('click', () => {
-        this.saveSettings({ customMascotSrc: preset.src });
+        this.saveSettings({ customMascotSrc: preset.src, dynamicPerAppActions: false });
         document.getElementById('mascotSettingPreview').src = preset.src;
+        const dynamicToggle = document.getElementById('dynamicActionsToggle');
+        if (dynamicToggle) dynamicToggle.checked = false;
         this.renderMascotPresets();
       });
       grid.appendChild(item);
     });
-  }
-
-  closeSettings() {
-    this.modal.classList.remove('open');
-    this.updateFocus(this.currentIndex, false);
   }
 
   renderAppEditorList() {
