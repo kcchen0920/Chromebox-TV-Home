@@ -1,0 +1,11 @@
+# Git ignore for Chromebox TV Home
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+backup/
+shots/
+work/
+tools/adbkey/
+cleanyourtv_repo/
+

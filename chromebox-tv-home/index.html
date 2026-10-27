@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean TV Home - Chromebox</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="tv-screen" id="tvScreen">
+    <!-- 背景光暈與桌布 -->
+    <div class="ambient-glow" id="ambientGlow"></div>
+    <div class="wallpaper-overlay"></div>
+
+    <!-- 頂部資訊列 (時鐘、日期、設定提示) -->
+    <header class="tv-header">
+      <div class="time-widget">
+        <h1 id="clockTime">12:00</h1>
+        <span id="clockDate">10月27日 星期二</span>
+      </div>
+      <div class="header-right">
+        <button class="settings-btn" id="openSettingsBtn" title="設定 (快捷鍵: S)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span class="key-hint">S</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主展示區：當前選中應用的標題 -->
+    <div class="focus-title-section">
+      <h2 id="focusAppName">YouTube</h2>
+      <p id="focusAppDesc">影音串流與熱門影片</p>
+    </div>
+
+    <!-- 浮動在 APP 上方的兒子動圖游標 -->
+    <div class="mascot-cursor" id="mascotCursor">
+      <div class="mascot-bubble" id="mascotBubble">
+        <img id="mascotImg" src="assets/mascot_default.svg" alt="Mascot">
+      </div>
+      <div class="mascot-shadow"></div>
+    </div>
+
+    <!-- APP 卡片網格 (支援遙控器方向鍵) -->
+    <main class="apps-container" id="appsContainer">
+      <div class="apps-grid" id="appsGrid">
+        <!-- 由 JavaScript 動態渲染卡片列表 -->
+      </div>
+    </main>
+
+    <!-- 底部遙控器導航指引 -->
+    <footer class="tv-footer">
+      <div class="nav-hints">
+        <span><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> 移動選擇</span>
+        <span><kbd>Enter</kbd> 開啟</span>
+        <span><kbd>S</kbd> 自訂動圖與設定</span>
+        <span><kbd>F11</kbd> 全螢幕</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 設定視窗 (自訂兒子動圖、替換常用 APP) -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="settings-dialog">
+      <div class="modal-header">
+        <h3>電視首頁客製化設定</h3>
+        <button class="close-btn" id="closeSettingsBtn">&times;</button>
+      </div>
+      
+      <div class="modal-content">
+        <!-- 兒子動圖設定專案 -->
+        <section class="settings-group">
+          <h4>👦 兒子動圖跳選游標設定</h4>
+          <div class="mascot-preview-box">
+            <div class="preview-stage">
+              <img id="mascotSettingPreview" src="assets/mascot_default.svg" alt="Preview">
+            </div>
+            <div class="preview-controls">
+              <label class="custom-file-upload">
+                <input type="file" id="mascotFileInput" accept="image/gif,image/webp,image/png,image/svg+xml">
+                <span>上傳兒子動圖 (GIF / WebP / PNG)</span>
+              </label>
+              <button class="btn-text" id="resetMascotBtn">重設為預設卡通動圖</button>
+            </div>
+          </div>
+          
+          <div class="setting-row">
+            <label for="mascotSizeRange">動圖尺寸大小：<span id="mascotSizeVal">80px</span></label>
+            <input type="range" id="mascotSizeRange" min="50" max="140" value="80">
+          </div>
+          <div class="setting-row">
+            <label for="mascotOffsetRange">浮動在 APP 上方高度：<span id="mascotOffsetVal">25px</span></label>
+            <input type="range" id="mascotOffsetRange" min="5" max="60" value="25">
+          </div>
+          <div class="setting-row">
+            <label for="bounceToggle">
+              <input type="checkbox" id="bounceToggle" checked>
+              啟用切換時的跳躍彈跳特效 (Jump & Bounce)
+            </label>
+          </div>
+        </section>
+
+        <!-- APP 管理 -->
+        <section class="settings-group">
+          <h4>📺 常用 APP 卡片管理</h4>
+          <div class="app-list-editor" id="appListEditor">
+            <!-- 動態生成各 App 列表 -->
+          </div>
+          <button class="btn-secondary" id="addAppBtn">+ 新增應用卡片</button>
+        </section>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" id="saveSettingsBtn">完成並儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

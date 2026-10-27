@@ -1,0 +1,17 @@
+{
+  "name": "Clean TV Home",
+  "short_name": "TV Home",
+  "description": "極簡無廣告 Chromebox 電視首頁，支援遙控器方向鍵與自訂動圖游標",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "icons": [
+    {
+      "src": "assets/mascot_default.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
