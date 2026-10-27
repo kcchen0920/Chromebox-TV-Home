@@ -42,7 +42,7 @@
     <!-- 浮動在 APP 上方的兒子動圖游標 -->
     <div class="mascot-cursor" id="mascotCursor">
       <div class="mascot-bubble" id="mascotBubble">
-        <img id="mascotImg" src="assets/mascot_default.svg" alt="Mascot">
+        <img id="mascotImg" src="assets/son_mascot_idle.webp" alt="Mascot">
       </div>
       <div class="mascot-shadow"></div>
     </div>
@@ -79,14 +79,21 @@
           <h4>👦 兒子動圖跳選游標設定</h4>
           <div class="mascot-preview-box">
             <div class="preview-stage">
-              <img id="mascotSettingPreview" src="assets/mascot_default.svg" alt="Preview">
+              <img id="mascotSettingPreview" src="assets/son_mascot_idle.webp" alt="Preview">
             </div>
             <div class="preview-controls">
               <label class="custom-file-upload">
                 <input type="file" id="mascotFileInput" accept="image/gif,image/webp,image/png,image/svg+xml">
-                <span>上傳兒子動圖 (GIF / WebP / PNG)</span>
+                <span>上傳其他兒子動圖 (GIF / WebP)</span>
               </label>
-              <button class="btn-text" id="resetMascotBtn">重設為預設卡通動圖</button>
+              <button class="btn-text" id="resetMascotBtn">重設為呼吸跳躍動圖</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <label>已為您完成去背的兒子照片庫（點擊立即替換）：</label>
+            <div class="mascot-presets-grid" id="mascotPresetsGrid">
+              <!-- JS 動態填入去背照片清單 -->
             </div>
           </div>
           

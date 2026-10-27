@@ -52,6 +52,20 @@ const DEFAULT_APPS = [
   }
 ];
 
+// 內建去背照片與動圖庫
+const MASCOT_PRESETS = [
+  { name: '動態呼吸跳躍 (推薦)', src: 'assets/son_mascot_idle.webp' },
+  { name: '活力跳躍動態', src: 'assets/son_mascot_jump.webp' },
+  { name: '去背寫真 1', src: 'assets/son_cutouts/1791980875662_cutout.png' },
+  { name: '去背寫真 2', src: 'assets/son_cutouts/MVIMG_20261025_172630_cutout.png' },
+  { name: '去背寫真 3', src: 'assets/son_cutouts/IMG_20251026_110414_cutout.png' },
+  { name: '去背寫真 4', src: 'assets/son_cutouts/IMG_20251206_155428_cutout.png' },
+  { name: '去背寫真 5', src: 'assets/son_cutouts/IMG_20251227_112032_cutout.png' },
+  { name: '去背寫真 6', src: 'assets/son_cutouts/MVIMG_20260627_114936_cutout.png' },
+  { name: '去背寫真 7', src: 'assets/son_cutouts/MVIMG_20260628_142552_2_cutout.png' },
+  { name: '卡通揮手小男孩', src: 'assets/mascot_default.svg' }
+];
+
 class TVLauncher {
   constructor() {
     this.apps = this.loadApps();
@@ -106,10 +120,10 @@ class TVLauncher {
 
   loadSettings() {
     const defaults = {
-      mascotSize: 80,
-      mascotOffset: 25,
+      mascotSize: 90,
+      mascotOffset: 20,
       bounce: true,
-      customMascotSrc: null
+      customMascotSrc: 'assets/son_mascot_idle.webp'
     };
     try {
       const saved = localStorage.getItem('tv_settings');
@@ -330,8 +344,9 @@ class TVLauncher {
 
     // 重設動圖
     document.getElementById('resetMascotBtn').addEventListener('click', () => {
-      this.saveSettings({ customMascotSrc: null });
-      document.getElementById('mascotSettingPreview').src = 'assets/mascot_default.svg';
+      this.saveSettings({ customMascotSrc: 'assets/son_mascot_idle.webp' });
+      document.getElementById('mascotSettingPreview').src = 'assets/son_mascot_idle.webp';
+      this.renderMascotPresets();
     });
 
     // 動圖尺寸滑桿
@@ -380,8 +395,27 @@ class TVLauncher {
 
   openSettings() {
     this.modal.classList.add('open');
-    document.getElementById('mascotSettingPreview').src = this.settings.customMascotSrc || 'assets/mascot_default.svg';
+    document.getElementById('mascotSettingPreview').src = this.settings.customMascotSrc || 'assets/son_mascot_idle.webp';
+    this.renderMascotPresets();
     this.renderAppEditorList();
+  }
+
+  renderMascotPresets() {
+    const grid = document.getElementById('mascotPresetsGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    MASCOT_PRESETS.forEach((preset) => {
+      const item = document.createElement('div');
+      item.className = `preset-thumb ${this.settings.customMascotSrc === preset.src ? 'active' : ''}`;
+      item.title = preset.name;
+      item.innerHTML = `<img src="${preset.src}" alt="${preset.name}">`;
+      item.addEventListener('click', () => {
+        this.saveSettings({ customMascotSrc: preset.src });
+        document.getElementById('mascotSettingPreview').src = preset.src;
+        this.renderMascotPresets();
+      });
+      grid.appendChild(item);
+    });
   }
 
   closeSettings() {
