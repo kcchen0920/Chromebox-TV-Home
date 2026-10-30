@@ -16,12 +16,30 @@
     <div class="ambient-glow" id="ambientGlow"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- 頂部資訊列 (時鐘、日期、設定提示) -->
+    <!-- 頂部資訊列 (時鐘、日期、即時天氣小工具、設定按鈕) -->
     <header class="tv-header">
-      <div class="time-widget">
-        <h1 id="clockTime">12:00</h1>
-        <span id="clockDate">10月27日 星期二</span>
+      <div class="header-left">
+        <div class="time-widget">
+          <h1 id="clockTime">12:00</h1>
+          <span id="clockDate">10月30日 星期五</span>
+        </div>
+
+        <!-- 🌤️ Plan A: 台灣即時天氣與情境小工具 -->
+        <div class="weather-widget" id="weatherWidget" role="button" tabindex="0" title="點擊立即更新當地天氣">
+          <div class="weather-badge-icon" id="weatherIcon">⛅</div>
+          <div class="weather-meta">
+            <div class="weather-primary-row">
+              <span class="weather-temp" id="weatherTemp">24°C</span>
+              <span class="weather-condition" id="weatherCondition">多雲</span>
+            </div>
+            <div class="weather-secondary-row">
+              <span class="weather-city-tag" id="weatherCityTag">📍 台北市</span>
+              <span class="weather-rain-prob" id="weatherRainProb">💧 降雨 10%</span>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div class="header-right">
         <button class="settings-btn" id="openSettingsBtn" title="設定 (快捷鍵: S)">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -42,6 +60,13 @@
       <p id="focusAppDesc">影音串流與熱門影片</p>
     </div>
 
+    <!-- 📱 Plan D: 分類分頁導航列 (支援遙控器方向鍵) -->
+    <div class="category-nav-bar">
+      <div class="category-tabs" id="categoryTabs" role="tablist">
+        <!-- 由 JavaScript 動態生成分類標籤 -->
+      </div>
+    </div>
+
     <!-- 浮動在 APP 上方的兒子動圖游標 -->
     <div class="mascot-cursor" id="mascotCursor">
       <div class="mascot-bubble" id="mascotBubble">
@@ -60,23 +85,50 @@
     <!-- 底部遙控器導航指引 -->
     <footer class="tv-footer">
       <div class="nav-hints">
-        <span><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> 移動選擇</span>
+        <span><kbd>←</kbd> <kbd>→</kbd> 選取應用</span>
+        <span><kbd>↑</kbd> <kbd>↓</kbd> 切換分類分頁</span>
         <span><kbd>Enter</kbd> 開啟</span>
-        <span><kbd>S</kbd> 自訂動圖與設定</span>
+        <span><kbd>S</kbd> 設定與新增</span>
         <span><kbd>F11</kbd> 全螢幕</span>
       </div>
     </footer>
   </div>
 
-  <!-- 設定視窗 (自訂兒子動圖、替換常用 APP) -->
+  <!-- 設定視窗 (自訂兒子動圖、替換常用 APP、天氣與分類管理) -->
   <div class="modal-backdrop" id="settingsModal">
     <div class="settings-dialog">
       <div class="modal-header">
-        <h3>電視首頁客製化設定</h3>
+        <h3>客廳電視首頁客製化設定</h3>
         <button class="close-btn" id="closeSettingsBtn">&times;</button>
       </div>
       
       <div class="modal-content">
+        <!-- 🌤️ Plan A: 台灣天氣城市設定 -->
+        <section class="settings-group">
+          <h4>🌤️ 台灣即時天氣設定</h4>
+          <div class="setting-row">
+            <label for="weatherCitySelect">預設觀測縣市：</label>
+            <select id="weatherCitySelect" class="settings-select">
+              <option value="Taipei">台北市 (Taipei)</option>
+              <option value="NewTaipei">新北市 (New Taipei)</option>
+              <option value="Taoyuan">桃園市 (Taoyuan)</option>
+              <option value="Taichung">台中市 (Taichung)</option>
+              <option value="Tainan">台南市 (Tainan)</option>
+              <option value="Kaohsiung">高雄市 (Kaohsiung)</option>
+              <option value="Hsinchu">新竹市 (Hsinchu)</option>
+              <option value="Yilan">宜蘭縣 (Yilan)</option>
+              <option value="Hualien">花蓮縣 (Hualien)</option>
+              <option value="Taitung">台東縣 (Taitung)</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="weatherAutoRefreshToggle">
+              <input type="checkbox" id="weatherAutoRefreshToggle" checked>
+              開機自動即時連線更新天氣資訊
+            </label>
+          </div>
+        </section>
+
         <!-- 兒子動圖設定專案 -->
         <section class="settings-group">
           <h4>👦 兒子動圖跳選游標設定</h4>
@@ -122,13 +174,25 @@
           </div>
         </section>
 
-        <!-- APP 管理 -->
+        <!-- 📱 Plan D: APP 管理與快速庫 -->
         <section class="settings-group">
-          <h4>📺 常用 APP 卡片管理</h4>
+          <h4>📺 常用 APP 卡片與分類管理</h4>
+
+          <!-- 熱門電視平台快速新增庫 -->
+          <div class="quick-add-box">
+            <div class="quick-add-title">⚡ 常用電視平台快速一鍵新增：</div>
+            <div class="quick-add-grid" id="quickAddGrid">
+              <!-- JS 動態填入預設庫 (LINE TV, YouTube Kids, KKBOX, 愛奇藝等) -->
+            </div>
+          </div>
+
+          <div class="app-list-header-row">
+            <span>現有卡片列表（可修改名稱、網址與分類）：</span>
+          </div>
           <div class="app-list-editor" id="appListEditor">
             <!-- 動態生成各 App 列表 -->
           </div>
-          <button class="btn-secondary" id="addAppBtn">+ 新增應用卡片</button>
+          <button class="btn-secondary" id="addAppBtn">+ 手動新增自訂網站捷徑</button>
         </section>
       </div>
 
