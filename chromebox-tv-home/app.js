@@ -717,6 +717,13 @@ class TVLauncher {
 
       const filtered = this.getFilteredApps();
 
+      // 電視遙控器 Menu 鍵或按鍵碼 82 / 93
+      if (e.key === 'ContextMenu' || e.key === 'Menu' || e.key === 'Settings' || e.keyCode === 82 || e.keyCode === 93) {
+        e.preventDefault();
+        this.openSettings();
+        return;
+      }
+
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
@@ -725,6 +732,8 @@ class TVLauncher {
           } else if (this.focusArea === 'tabs') {
             this.activeTabIdx = Math.max(0, this.activeTabIdx - 1);
             this.highlightCategoryTab(this.activeTabIdx);
+          } else if (this.focusArea === 'header') {
+            this.highlightHeaderItem('weather');
           }
           break;
 
@@ -735,6 +744,8 @@ class TVLauncher {
           } else if (this.focusArea === 'tabs') {
             this.activeTabIdx = Math.min(CATEGORIES.length - 1, this.activeTabIdx + 1);
             this.highlightCategoryTab(this.activeTabIdx);
+          } else if (this.focusArea === 'header') {
+            this.highlightHeaderItem('settings');
           }
           break;
 
@@ -749,12 +760,22 @@ class TVLauncher {
             // 移除卡片 focus 框
             this.grid.querySelectorAll('.app-card').forEach(c => c.classList.remove('focused'));
             this.updateMascotPosition(true, 'right');
+          } else if (this.focusArea === 'tabs') {
+            // 從分類分頁再往上移動到頂部列 (齒輪設定與天氣小工具)
+            this.focusArea = 'header';
+            this.unhighlightCategoryTabs();
+            this.highlightHeaderItem('settings');
           }
           break;
 
         case 'ArrowDown':
           e.preventDefault();
-          if (this.focusArea === 'tabs') {
+          if (this.focusArea === 'header') {
+            // 從頂部列往下回到分類分頁
+            this.focusArea = 'tabs';
+            this.unhighlightHeaderItems();
+            this.highlightCategoryTab(this.activeTabIdx);
+          } else if (this.focusArea === 'tabs') {
             // 從分類分頁往下回到應用卡片
             this.focusArea = 'apps';
             this.unhighlightCategoryTabs();
@@ -776,6 +797,12 @@ class TVLauncher {
               this.unhighlightCategoryTabs();
               this.updateFocus(0, true);
             }
+          } else if (this.focusArea === 'header') {
+            if (this.headerFocusItem === 'settings') {
+              this.openSettings();
+            } else if (this.headerFocusItem === 'weather') {
+              this.fetchWeather(true);
+            }
           }
           break;
 
@@ -787,6 +814,28 @@ class TVLauncher {
 
         case 'F11':
           break;
+      }
+    });
+
+    // 遙控器長按 OK / Enter 鍵偵測 (長按 750ms 自動進入設定視窗)
+    let enterHoldTimer = null;
+    let didTriggerHold = false;
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !enterHoldTimer && !this.modal.classList.contains('open')) {
+        didTriggerHold = false;
+        enterHoldTimer = setTimeout(() => {
+          didTriggerHold = true;
+          this.openSettings();
+        }, 750);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        if (enterHoldTimer) {
+          clearTimeout(enterHoldTimer);
+          enterHoldTimer = null;
+        }
       }
     });
 
@@ -961,6 +1010,25 @@ class TVLauncher {
 
   unhighlightCategoryTabs() {
     this.categoryTabs.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('tab-focused'));
+  }
+
+  highlightHeaderItem(item) {
+    this.unhighlightHeaderItems();
+    this.headerFocusItem = item;
+    if (item === 'settings') {
+      const btn = document.getElementById('openSettingsBtn');
+      if (btn) btn.classList.add('header-focused');
+    } else if (item === 'weather') {
+      const widget = document.getElementById('weatherWidget');
+      if (widget) widget.classList.add('header-focused');
+    }
+  }
+
+  unhighlightHeaderItems() {
+    const btn = document.getElementById('openSettingsBtn');
+    if (btn) btn.classList.remove('header-focused');
+    const widget = document.getElementById('weatherWidget');
+    if (widget) widget.classList.remove('header-focused');
   }
 
   openSettings() {

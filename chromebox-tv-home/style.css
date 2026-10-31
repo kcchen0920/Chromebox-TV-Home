@@ -167,10 +167,19 @@ body {
   transition: all 0.2s;
 }
 
-.settings-btn:hover, .settings-btn:focus {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.08);
+.settings-btn:hover, .settings-btn:focus, .settings-btn.header-focused {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #38bdf8;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.7);
+  transform: scale(1.12);
   outline: none;
+}
+
+.weather-widget.header-focused {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #38bdf8;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+  transform: scale(1.05);
 }
 
 .key-hint {
