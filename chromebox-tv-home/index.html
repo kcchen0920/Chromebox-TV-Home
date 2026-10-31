@@ -17,6 +17,25 @@
     <div class="wallpaper-overlay"></div>
 
     <!-- 頂部資訊列 (時鐘、日期、即時天氣小工具、設定按鈕) -->
+    <!-- 🚗 Plan 6.1: 車載即時返家到站 (Car-to-Living-Room ETA) 浮動通知卡片 -->
+    <div class="car-eta-toast" id="carEtaToast" aria-live="polite">
+      <div class="eta-icon-box">
+        <span class="eta-car-icon">🚗</span>
+        <span class="eta-ping-dot"></span>
+      </div>
+      <div class="eta-content">
+        <div class="eta-title-row">
+          <span class="eta-title">返家即時通報</span>
+          <span class="eta-badge" id="etaBadge">預計 10 分鐘抵達</span>
+        </div>
+        <p class="eta-message" id="etaMessage">爸爸正在返家途中，即將抵達客廳！</p>
+        <div class="eta-progress-bar">
+          <div class="eta-progress-inner" id="etaProgressInner"></div>
+        </div>
+      </div>
+      <button class="eta-close-btn" id="etaCloseBtn" title="關閉通知">&times;</button>
+    </div>
+
     <header class="tv-header">
       <div class="header-left">
         <div class="time-widget">
@@ -126,6 +145,24 @@
               <input type="checkbox" id="weatherAutoRefreshToggle" checked>
               開機自動即時連線更新天氣資訊
             </label>
+          </div>
+        </section>
+
+        <!-- 🚗 Plan 6.1: 車載即時返家連動 (Car-to-Living-Room ETA) 設定 -->
+        <section class="settings-group">
+          <h4>🚗 車載即時返家連動 (Car-to-Living-Room ETA)</h4>
+          <div class="setting-row">
+            <label for="carEtaEnabledToggle">
+              <input type="checkbox" id="carEtaEnabledToggle" checked>
+              啟用客廳電視即時彈窗接收 (車輛返家接近時自動通知)
+            </label>
+          </div>
+          <div class="setting-row">
+            <label for="carEtaChannelInput">家庭專屬推播頻道識別碼 (ntfy.sh Topic)：</label>
+            <input type="text" id="carEtaChannelInput" class="settings-input" placeholder="例如: kcchen-family-livingroom" value="kcchen-family-livingroom">
+          </div>
+          <div class="setting-row" style="margin-top: 8px;">
+            <button class="btn-text" id="testCarEtaBtn">🧪 測試發送客廳返家模擬彈窗</button>
           </div>
         </section>
 

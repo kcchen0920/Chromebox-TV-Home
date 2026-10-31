@@ -296,6 +296,7 @@ class TVLauncher {
     this.renderApps();
     this.initClock();
     this.initWeather();
+    this.initCarEtaListener();
     this.bindEvents();
 
     // 介面穩定後定位游標
@@ -342,7 +343,9 @@ class TVLauncher {
       dynamicPerAppActions: true,
       customMascotSrc: 'assets/son_mascot_idle.webp',
       weatherCity: 'Taipei',
-      weatherAutoRefresh: true
+      weatherAutoRefresh: true,
+      carEtaEnabled: true,
+      carEtaChannel: 'kcchen-family-livingroom'
     };
     try {
       const saved = localStorage.getItem('tv_settings_v2');
@@ -818,6 +821,47 @@ class TVLauncher {
       });
     }
 
+    // 🚗 Plan 6.1: 車載返家到站連動設定事件
+    const carEtaToggle = document.getElementById('carEtaEnabledToggle');
+    if (carEtaToggle) {
+      carEtaToggle.checked = this.settings.carEtaEnabled !== false;
+      carEtaToggle.addEventListener('change', (e) => {
+        this.saveSettings({ carEtaEnabled: e.target.checked });
+        this.initCarEtaListener();
+      });
+    }
+
+    const carEtaChannelInput = document.getElementById('carEtaChannelInput');
+    if (carEtaChannelInput) {
+      carEtaChannelInput.value = this.settings.carEtaChannel || 'kcchen-family-livingroom';
+      carEtaChannelInput.addEventListener('change', (e) => {
+        const val = e.target.value.trim() || 'kcchen-family-livingroom';
+        this.saveSettings({ carEtaChannel: val });
+        this.initCarEtaListener();
+      });
+    }
+
+    const testCarEtaBtn = document.getElementById('testCarEtaBtn');
+    if (testCarEtaBtn) {
+      testCarEtaBtn.addEventListener('click', () => {
+        this.showCarEtaToast({
+          title: '🚗 爸爸正在回家路上',
+          badge: '預計 10 分鐘抵達',
+          message: '目前車輛距離住家約 8.5 km，正在平穩行駛中。',
+          progress: 50,
+          isArrived: false
+        });
+      });
+    }
+
+    const etaCloseBtn = document.getElementById('etaCloseBtn');
+    if (etaCloseBtn) {
+      etaCloseBtn.addEventListener('click', () => {
+        const toast = document.getElementById('carEtaToast');
+        if (toast) toast.classList.remove('visible');
+      });
+    }
+
     // 上傳兒子動圖
     const fileInput = document.getElementById('mascotFileInput');
     fileInput.addEventListener('change', (e) => {
@@ -922,6 +966,11 @@ class TVLauncher {
   openSettings() {
     this.modal.classList.add('open');
     document.getElementById('mascotSettingPreview').src = this.settings.customMascotSrc || 'assets/son_mascot_idle.webp';
+    const carEtaToggle = document.getElementById('carEtaEnabledToggle');
+    if (carEtaToggle) carEtaToggle.checked = this.settings.carEtaEnabled !== false;
+    const carEtaChannelInput = document.getElementById('carEtaChannelInput');
+    if (carEtaChannelInput) carEtaChannelInput.value = this.settings.carEtaChannel || 'kcchen-family-livingroom';
+
     this.renderMascotPresets();
     this.renderQuickAddGrid();
     this.renderAppEditorList();
@@ -1025,6 +1074,125 @@ class TVLauncher {
 
       listContainer.appendChild(row);
     });
+  }
+
+  // 🚗 Plan 6.1: 車載返家即時到站 (Car-to-Living-Room ETA) 監聽器與彈窗邏輯
+  initCarEtaListener() {
+    if (this.carEtaEventSource) {
+      this.carEtaEventSource.close();
+      this.carEtaEventSource = null;
+    }
+
+    if (this.settings.carEtaEnabled === false) {
+      console.log('🚗 車載返家到站監聽已停用');
+      return;
+    }
+
+    const channel = encodeURIComponent(this.settings.carEtaChannel || 'kcchen-family-livingroom');
+    try {
+      console.log(`📡 正在連線 ntfy.sh 車載推播頻道: ${channel}`);
+      this.carEtaEventSource = new EventSource(`https://ntfy.sh/${channel}/sse`);
+
+      this.carEtaEventSource.onmessage = (event) => {
+        try {
+          const raw = JSON.parse(event.data);
+          let payload = raw;
+          if (raw.message) {
+            try {
+              payload = JSON.parse(raw.message);
+            } catch (e) {
+              payload = { event: 'car_approaching', message: raw.message };
+            }
+          }
+
+          if (payload.event === 'car_approaching') {
+            const dist = payload.distance_km ? `${payload.distance_km} km` : '約 8~10 km';
+            const eta = payload.eta_minutes || 10;
+            this.showCarEtaToast({
+              title: '🚗 爸爸正在回家路上',
+              badge: `預計 ${eta} 分鐘抵達`,
+              message: `目前車輛距離住家約 ${dist}，正在平穩行駛中。`,
+              progress: Math.min(90, Math.max(15, 100 - (payload.distance_km || 10) * 8)),
+              isArrived: false
+            });
+          } else if (payload.event === 'car_arrived') {
+            this.showCarEtaToast({
+              title: '🏡 爸爸已抵達家門口！',
+              badge: '已抵達',
+              message: '車輛已進入住家 500m 範圍，請準備開門迎接！',
+              progress: 100,
+              isArrived: true
+            });
+          }
+        } catch (err) {
+          console.warn('解析車載推播資料失敗:', err);
+        }
+      };
+
+      this.carEtaEventSource.onerror = (err) => {
+        console.warn('ntfy.sh 連線狀態更新，自動保持監聽');
+      };
+    } catch (e) {
+      console.error('初始化車載推播監聽失敗:', e);
+    }
+  }
+
+  showCarEtaToast(info) {
+    const toast = document.getElementById('carEtaToast');
+    if (!toast) return;
+
+    const titleEl = toast.querySelector('.eta-title');
+    const badgeEl = document.getElementById('etaBadge');
+    const messageEl = document.getElementById('etaMessage');
+    const progressEl = document.getElementById('etaProgressInner');
+    const carIcon = toast.querySelector('.eta-car-icon');
+
+    if (titleEl) titleEl.textContent = info.title;
+    if (badgeEl) {
+      badgeEl.textContent = info.badge;
+      badgeEl.className = info.isArrived ? 'eta-badge eta-badge-arrived' : 'eta-badge';
+    }
+    if (messageEl) messageEl.textContent = info.message;
+    if (progressEl) progressEl.style.width = `${info.progress || 50}%`;
+    if (carIcon) carIcon.textContent = info.isArrived ? '🏡' : '🚗';
+
+    // 播放客廳溫柔提示音
+    this.playCarNotificationSound();
+
+    toast.classList.add('visible');
+
+    if (this.carEtaTimer) clearTimeout(this.carEtaTimer);
+    this.carEtaTimer = setTimeout(() => {
+      toast.classList.remove('visible');
+    }, 25000); // 25 秒後自動隱藏
+  }
+
+  playCarNotificationSound() {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      if (!this.audioCtx) this.audioCtx = new AudioContext();
+      if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc.type = 'sine';
+      // 雙音叮咚音效 (C5 523Hz -> G5 784Hz)
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.setValueAtTime(783.99, now + 0.15);
+
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.12, now + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.6);
+    } catch (e) {}
   }
 }
 
